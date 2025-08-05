@@ -4,9 +4,17 @@ from collections import defaultdict
 class PairHeap:
     def __init__(self, pair_counts: defaultdict[tuple[bytes, bytes], int]):
         self.pair_counts = pair_counts
-        self.heap = [(-freq, (-pair[0][0], -pair[1][0]), pair) for pair, freq in self.pair_counts.items() if freq > 0]
+        self.heap = [(-freq, self._neg_lex(pair), pair)
+                     for pair, freq in self.pair_counts.items() if freq > 0]
         heapq.heapify(self.heap)
         self.removed = set()
+
+    def _neg_lex(self, pair: tuple[bytes, bytes]) -> tuple[int, ...]:
+        combined = pair[0] + pair[1]
+        # 反转字节序列，然后取负值
+        # 这样字典序大的会变成字典序小的（在反转后的序列中）
+        reversed_combined = combined[::-1]
+        return tuple(-b for b in reversed_combined)
 
     def pop(self) -> tuple[bytes, bytes] | None:
         while self.heap:
@@ -14,26 +22,31 @@ class PairHeap:
             if pair in self.removed:
                 self.removed.remove(pair)
                 continue
+            # 检查频率是否仍然匹配（避免过期条目）
             if neg_freq != -self.pair_counts[pair]:
                 continue
             return pair
         return None
 
     def update_freq(self, pair: tuple[bytes, bytes], new_freq: int):
-        self.pair_counts[pair] = new_freq
-        heapq.heappush(self.heap, (-new_freq, (-pair[0][0], -pair[1][0]), pair))
+        if new_freq > 0:
+            self.pair_counts[pair] = new_freq
+            heapq.heappush(self.heap, (-new_freq, self._neg_lex(pair), pair))
+        else:
+            # 如果频率为0或负数，相当于删除
+            self.remove(pair)
 
     def remove(self, pair: tuple[bytes, bytes]):
+        """标记pair为已删除"""
         self.pair_counts[pair] = 0
         self.removed.add(pair)
 
 if __name__ == "__main__":
+    # 测试用例
     pair_counts = {
         (b'a', b'b'): 5,
-        (b'b', b'c'): 5,
-        (b'c', b'd'): 2,
+        (b'a', b'br'): 5,  # 频率相同，但字典序更大
+        (b'x', b'y'): 3
     }
     pair_heap = PairHeap(defaultdict(int, pair_counts))
-    print(pair_heap.pop())
-    pair_heap.update_freq((b'c', b'd'), 4)
     print(pair_heap.pop())

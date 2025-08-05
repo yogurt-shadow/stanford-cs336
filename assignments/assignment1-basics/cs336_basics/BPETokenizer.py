@@ -20,14 +20,20 @@ class BPETokenizer:
         with open(input_path, "rb") as file:
             file.seek(start)
             chunk = file.read(end - start).decode("utf-8", errors="ignore")
-            for token in re.finditer(self.pattern, chunk):
-                token = token.group()
-                if token == "":
+            parts = re.split(f"({'|'.join(map(re.escape, special_tokens))})", chunk)
+            for part in parts:
+                if part in special_tokens:
                     continue
-                elif token in special_tokens:
+                if part == "":
                     continue
-                else:
-                    word_counts[token.encode("utf-8")] += 1
+                for token in re.finditer(self.pattern, part):
+                    token = token.group()
+                    if token == "":
+                        continue
+                    elif token in special_tokens:
+                        continue
+                    else:
+                        word_counts[token.encode("utf-8")] += 1
         return word_counts
     
     def init_vocab(self, special_tokens: list[str]) -> dict[int, bytes]:
