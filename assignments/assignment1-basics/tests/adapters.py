@@ -591,6 +591,11 @@ def run_train_bpe(
                 representing that <token1> was merged with <token2>.
                 Merges are ordered by order of creation.
     """
-    tokenizer = BPETokenizer()
-    vocab, merges = tokenizer.tokenize(input_path, vocab_size, special_tokens)
+    bpe = BPETokenizer()
+    vocab, merges = bpe.train_bpe(
+        input_path=input_path,
+        vocab_size=vocab_size,
+        special_tokens=special_tokens,
+        **kwargs,
+    )
     return vocab, merges
