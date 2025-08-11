@@ -1,0 +1,839 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0
+rootdir: /home/wangzh/cs336/assignments/assignment1-basics
+configfile: pyproject.toml
+plugins: jaxtyping-0.3.2
+collected 25 items
+
+tests/test_tokenizer.py::test_roundtrip_empty FAILED
+tests/test_tokenizer.py::test_empty_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_roundtrip_single_character FAILED
+tests/test_tokenizer.py::test_single_character_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_roundtrip_single_unicode_character FAILED
+tests/test_tokenizer.py::test_single_unicode_character_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_roundtrip_ascii_string FAILED
+tests/test_tokenizer.py::test_ascii_string_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_roundtrip_unicode_string FAILED
+tests/test_tokenizer.py::test_unicode_string_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_roundtrip_unicode_string_with_special_tokens FAILED
+tests/test_tokenizer.py::test_unicode_string_with_special_tokens_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_overlapping_special_tokens FAILED
+tests/test_tokenizer.py::test_address_roundtrip FAILED
+tests/test_tokenizer.py::test_address_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_german_roundtrip FAILED
+tests/test_tokenizer.py::test_german_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_tinystories_sample_roundtrip FAILED
+tests/test_tokenizer.py::test_tinystories_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_encode_special_token_trailing_newlines FAILED
+tests/test_tokenizer.py::test_encode_special_token_double_newline_non_whitespace FAILED
+tests/test_tokenizer.py::test_encode_iterable_tinystories_sample_roundtrip FAILED
+tests/test_tokenizer.py::test_encode_iterable_tinystories_matches_tiktoken FAILED
+tests/test_tokenizer.py::test_encode_iterable_memory_usage FAILED
+tests/test_tokenizer.py::test_encode_memory_usage XFAIL (Tokenizer.e...)
+
+=================================== FAILURES ===================================
+_____________________________ test_roundtrip_empty _____________________________
+
+    def test_roundtrip_empty():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = ""
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c751fb60>, text = ''
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_________________________ test_empty_matches_tiktoken __________________________
+
+    def test_empty_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = ""
+    
+        reference_ids = reference_tokenizer.encode(test_string)
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6c2c7d0>, text = ''
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_______________________ test_roundtrip_single_character ________________________
+
+    def test_roundtrip_single_character():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "s"
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6c2ead0>
+text = 's'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+____________________ test_single_character_matches_tiktoken ____________________
+
+    def test_single_character_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "s"
+    
+        reference_ids = reference_tokenizer.encode(test_string)
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6ca29e0>
+text = 's'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+___________________ test_roundtrip_single_unicode_character ____________________
+
+    def test_roundtrip_single_unicode_character():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "🙃"
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6ca2fd0>
+text = '🙃'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+________________ test_single_unicode_character_matches_tiktoken ________________
+
+    def test_single_unicode_character_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "🙃"
+    
+        reference_ids = reference_tokenizer.encode(test_string)
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c751af90>
+text = '🙃'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_________________________ test_roundtrip_ascii_string __________________________
+
+    def test_roundtrip_ascii_string():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "Hello, how are you?"
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6cf6cf0>
+text = 'Hello, how are you?'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________________ test_ascii_string_matches_tiktoken ______________________
+
+    def test_ascii_string_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        test_string = "Hello, how are you?"
+    
+        reference_ids = reference_tokenizer.encode(test_string)
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6cf6f10>
+text = 'Hello, how are you?'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+________________________ test_roundtrip_unicode_string _________________________
+
+    def test_roundtrip_unicode_string():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        test_string = "Héllò hôw are ü? 🙃"
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6c5de50>
+text = 'Héllò hôw are ü? 🙃'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_____________________ test_unicode_string_matches_tiktoken _____________________
+
+    def test_unicode_string_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        test_string = "Héllò hôw are ü? 🙃"
+    
+        reference_ids = reference_tokenizer.encode(test_string)
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:212: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6b06550>
+text = 'Héllò hôw are ü? 🙃'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________ test_roundtrip_unicode_string_with_special_tokens _______________
+
+    def test_roundtrip_unicode_string_with_special_tokens():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        test_string = "Héllò hôw <|endoftext|><|endoftext|> are ü? 🙃<|endoftext|>"
+>       encoded_ids = tokenizer.encode(test_string)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:224: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6cfcd70>
+text = 'Héllò hôw <|endoftext|><|endoftext|> are ü? 🙃<|endoftext|>'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+___________ test_unicode_string_with_special_tokens_matches_tiktoken ___________
+
+    def test_unicode_string_with_special_tokens_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        test_string = "Héllò hôw <|endoftext|><|endoftext|> are ü? 🙃<|endoftext|>"
+    
+        reference_ids = reference_tokenizer.encode(test_string, allowed_special={"<|endoftext|>"})
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:241: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6cfe120>
+text = 'Héllò hôw <|endoftext|><|endoftext|> are ü? 🙃<|endoftext|>'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_______________________ test_overlapping_special_tokens ________________________
+
+    def test_overlapping_special_tokens():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+            special_tokens=["<|endoftext|>", "<|endoftext|><|endoftext|>"],
+        )
+        test_string = "Hello, how <|endoftext|><|endoftext|> are you?<|endoftext|>"
+    
+>       ids = tokenizer.encode(test_string)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6b8e890>
+text = 'Hello, how <|endoftext|><|endoftext|> are you?<|endoftext|>'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+____________________________ test_address_roundtrip ____________________________
+
+    def test_address_roundtrip():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        with open(FIXTURES_PATH / "address.txt") as f:
+            corpus_contents = f.read()
+    
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:273: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6b8e190>
+text = 'Four score and seven years ago our fathers brought forth, on this continent, a new nation, conceived in Liberty, and ... birth of freedom—and that government of the people, by the people, for the people, shall not perish from the earth.\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+________________________ test_address_matches_tiktoken _________________________
+
+    def test_address_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        corpus_path = FIXTURES_PATH / "address.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents)
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:287: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c595f040>
+text = 'Four score and seven years ago our fathers brought forth, on this continent, a new nation, conceived in Liberty, and ... birth of freedom—and that government of the people, by the people, for the people, shall not perish from the earth.\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+____________________________ test_german_roundtrip _____________________________
+
+    def test_german_roundtrip():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        with open(FIXTURES_PATH / "german.txt") as f:
+            corpus_contents = f.read()
+    
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:302: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6c13590>
+text = 'Die Leland Stanford Junior University (kurz Stanford University oder Stanford, Spitzname „Die Farm“) ist eine private...ät eingeschrieben und studierten an einer der sieben Fakultäten. Ihr Präsident war bis 2023 Marc Tessier-Lavigne.[2]\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_________________________ test_german_matches_tiktoken _________________________
+
+    def test_german_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        corpus_path = FIXTURES_PATH / "german.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents)
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:316: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6c137d0>
+text = 'Die Leland Stanford Junior University (kurz Stanford University oder Stanford, Spitzname „Die Farm“) ist eine private...ät eingeschrieben und studierten an einer der sieben Fakultäten. Ihr Präsident war bis 2023 Marc Tessier-Lavigne.[2]\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________________ test_tinystories_sample_roundtrip _______________________
+
+    def test_tinystories_sample_roundtrip():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        with open(FIXTURES_PATH / "tinystories_sample.txt") as f:
+            corpus_contents = f.read()
+    
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:331: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c4e89de0>
+text = '\nOnce upon a time there was a little boy named Ben. Ben loved to explore the world around him. He saw many amazing t...n. Lucy knew that even if others ignore her friend, the spirit was real and they could play together.\n<|endoftext|>\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________________ test_tinystories_matches_tiktoken _______________________
+
+    def test_tinystories_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        corpus_path = FIXTURES_PATH / "tinystories_sample.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents, allowed_special={"<|endoftext|>"})
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:344: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c4e8a360>
+text = '\nOnce upon a time there was a little boy named Ben. Ben loved to explore the world around him. He saw many amazing t...n. Lucy knew that even if others ignore her friend, the spirit was real and they could play together.\n<|endoftext|>\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+_________________ test_encode_special_token_trailing_newlines __________________
+
+    def test_encode_special_token_trailing_newlines():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        corpus_path = FIXTURES_PATH / "special_token_trailing_newlines.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents, allowed_special={"<|endoftext|>"})
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:360: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c4e867b0>
+text = '<|endoftext|>\n\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+___________ test_encode_special_token_double_newline_non_whitespace ____________
+
+    def test_encode_special_token_double_newline_non_whitespace():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        corpus_path = FIXTURES_PATH / "special_token_double_newlines_non_whitespace.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents, allowed_special={"<|endoftext|>"})
+>       ids = tokenizer.encode(corpus_contents)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:376: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c4e86670>
+text = '<|endoftext|>\n\ntesting!'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________ test_encode_iterable_tinystories_sample_roundtrip _______________
+
+    def test_encode_iterable_tinystories_sample_roundtrip():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        all_ids = []
+        with open(FIXTURES_PATH / "tinystories_sample.txt") as f:
+>           for _id in tokenizer.encode_iterable(f):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:390: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:345: in encode_iterable
+    for encoded in map(self.encode, batch):
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c4c48200>
+text = '\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________ test_encode_iterable_tinystories_matches_tiktoken _______________
+
+    def test_encode_iterable_tinystories_matches_tiktoken():
+        reference_tokenizer = tiktoken.get_encoding("gpt2")
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH, merges_path=MERGES_PATH, special_tokens=["<|endoftext|>"]
+        )
+        corpus_path = FIXTURES_PATH / "tinystories_sample.txt"
+        with open(corpus_path) as f:
+            corpus_contents = f.read()
+        reference_ids = reference_tokenizer.encode(corpus_contents, allowed_special={"<|endoftext|>"})
+        all_ids = []
+        with open(FIXTURES_PATH / "tinystories_sample.txt") as f:
+>           for _id in tokenizer.encode_iterable(f):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:408: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cs336_basics/BPETokenizer.py:345: in encode_iterable
+    for encoded in map(self.encode, batch):
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6b9d9d0>
+text = '\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+______________________ test_encode_iterable_memory_usage _______________________
+
+    @pytest.mark.skipif(
+        not sys.platform.startswith("linux"),
+        reason="rlimit support for non-linux systems is spotty.",
+    )
+    def test_encode_iterable_memory_usage():
+        tokenizer = get_tokenizer_from_vocab_merges_path(
+            vocab_path=VOCAB_PATH,
+            merges_path=MERGES_PATH,
+        )
+        with open(FIXTURES_PATH / "tinystories_sample_5M.txt") as f:
+            ids = []
+>           for _id in _encode_iterable(tokenizer, f):
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_tokenizer.py:427: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tokenizer.py:455: in _encode_iterable
+    yield from tokenizer.encode_iterable(iterable)
+cs336_basics/BPETokenizer.py:340: in encode_iterable
+    for encoded in map(self.encode, batch):
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+cs336_basics/BPETokenizer.py:290: in encode
+    byte_tokens = self._pre_tokenize(text)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <cs336_basics.BPETokenizer.Tokenizer object at 0x7443c6b9d9d0>
+text = 'u don\'t have to be scared of the loud dog, I\'ll protect you". The mole felt so safe with the little girl. She was v...nd the mole soon came to trust her. He leaned against her and she kept him safe. The mole had found his best friend.\n'
+
+    def _pre_tokenize(self, text) -> list[bytes]:
+        """
+        Pre-tokenize the input text into bytes.
+        """
+>       parts = self.split_by_special_tokens(text, list(self.special_tokens.keys()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Tokenizer.split_by_special_tokens() takes 2 positional arguments but 3 were given
+
+cs336_basics/BPETokenizer.py:276: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_tokenizer.py::test_roundtrip_empty - TypeError: Tokenizer.s...
+FAILED tests/test_tokenizer.py::test_empty_matches_tiktoken - TypeError: Toke...
+FAILED tests/test_tokenizer.py::test_roundtrip_single_character - TypeError: ...
+FAILED tests/test_tokenizer.py::test_single_character_matches_tiktoken - Type...
+FAILED tests/test_tokenizer.py::test_roundtrip_single_unicode_character - Typ...
+FAILED tests/test_tokenizer.py::test_single_unicode_character_matches_tiktoken
+FAILED tests/test_tokenizer.py::test_roundtrip_ascii_string - TypeError: Toke...
+FAILED tests/test_tokenizer.py::test_ascii_string_matches_tiktoken - TypeErro...
+FAILED tests/test_tokenizer.py::test_roundtrip_unicode_string - TypeError: To...
+FAILED tests/test_tokenizer.py::test_unicode_string_matches_tiktoken - TypeEr...
+FAILED tests/test_tokenizer.py::test_roundtrip_unicode_string_with_special_tokens
+FAILED tests/test_tokenizer.py::test_unicode_string_with_special_tokens_matches_tiktoken
+FAILED tests/test_tokenizer.py::test_overlapping_special_tokens - TypeError: ...
+FAILED tests/test_tokenizer.py::test_address_roundtrip - TypeError: Tokenizer...
+FAILED tests/test_tokenizer.py::test_address_matches_tiktoken - TypeError: To...
+FAILED tests/test_tokenizer.py::test_german_roundtrip - TypeError: Tokenizer....
+FAILED tests/test_tokenizer.py::test_german_matches_tiktoken - TypeError: Tok...
+FAILED tests/test_tokenizer.py::test_tinystories_sample_roundtrip - TypeError...
+FAILED tests/test_tokenizer.py::test_tinystories_matches_tiktoken - TypeError...
+FAILED tests/test_tokenizer.py::test_encode_special_token_trailing_newlines
+FAILED tests/test_tokenizer.py::test_encode_special_token_double_newline_non_whitespace
+FAILED tests/test_tokenizer.py::test_encode_iterable_tinystories_sample_roundtrip
+FAILED tests/test_tokenizer.py::test_encode_iterable_tinystories_matches_tiktoken
+FAILED tests/test_tokenizer.py::test_encode_iterable_memory_usage - TypeError...
+======================== 24 failed, 1 xfailed in 2.04s =========================

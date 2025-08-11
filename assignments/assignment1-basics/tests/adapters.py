@@ -9,7 +9,9 @@ import numpy.typing as npt
 import torch
 from torch import Tensor
 
-from cs336_basics.BPETokenizer import BPETokenizer
+from cs336_basics.BPETrainer import BPETrainer
+from cs336_basics.Tokenizer import Tokenizer
+import time
 
 
 def run_linear(
@@ -561,7 +563,13 @@ def get_tokenizer(
     Returns:
         A BPE tokenizer that uses the provided vocab, merges, and special tokens.
     """
-    raise NotImplementedError
+    # from cs336_basics.tk2 import Tokenizer
+
+    return Tokenizer(
+        vocab=vocab,
+        merges=merges,
+        special_tokens=special_tokens,
+    )
 
 
 def run_train_bpe(
@@ -591,11 +599,14 @@ def run_train_bpe(
                 representing that <token1> was merged with <token2>.
                 Merges are ordered by order of creation.
     """
-    bpe = BPETokenizer()
-    vocab, merges = bpe.train_bpe(
+    start_time = time.time()
+    trainer = BPETrainer()
+    vocab, merges = trainer.train_bpe(
         input_path=input_path,
         vocab_size=vocab_size,
         special_tokens=special_tokens,
         **kwargs,
     )
+    end_time = time.time()
+    print(f"Training BPE tokenizer took {end_time - start_time:.2f} seconds.")
     return vocab, merges
