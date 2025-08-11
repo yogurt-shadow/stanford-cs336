@@ -1,7 +1,7 @@
 import regex as re
 import pickle
 from typing import Iterable, Iterator
-from cs336_basics.BPETrainer import str2bytes
+from cs336_basics.Token.BPETrainer import str2bytes
 
 def split_by_special_tokens(
     text: str, special_tokens: list[str]

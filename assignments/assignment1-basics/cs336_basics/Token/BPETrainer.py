@@ -3,11 +3,7 @@ import regex as re
 from collections import defaultdict
 from cs336_basics.pretokenization_example import find_chunk_boundaries
 import multiprocessing as mp
-from tqdm import trange, tqdm
-import pickle
-from typing import Set, Iterable, Iterator
-from cs336_basics.PairHeap import PairHeap, PrioritizedPair
-from cs336_basics.DoublyLinkedList import DoublyLinkedList, Node
+from typing import Set
 
 def str2bytes(s: str) -> list[bytes]:
     """
@@ -67,96 +63,6 @@ class BPETrainer:
                 pair = (token[i], token[i + 1])
                 pair_count[pair] += freq
         return pair_count
-
-    def init_pair_node(self, dll: DoublyLinkedList) -> dict[tuple[bytes, bytes], Set[Node]]:
-        pair_node = defaultdict(set)
-        current = dll.head
-        while current:
-            if current.word_end:
-                current = current.next
-                continue
-            if current.next is not None:
-                pair = (current.data, current.next.data)
-                pair_node[pair].add(current)
-            current = current.next
-        return pair_node
-
-    def merge_pairs_updated(self,
-                            vocab: dict[int, bytes],
-                            pair_count: dict[tuple[bytes, bytes], int],
-                            word_count: dict[tuple[bytes], int],
-                            vocab_size: int
-    ) -> tuple[dict[int, bytes], list[tuple[bytes, bytes]]]:
-        """
-        Use updated data structures to merge the most frequent pairs in the vocabulary.
-        1. use doubly linked list to store the pairs
-        2. use pair heap to efficiently get the most frequent pairs
-        """
-        pair_heap = PairHeap(pair_count)
-        merges = []
-        dll = DoublyLinkedList()
-        dll.add_from_words(word_count)
-        pair_node = self.init_pair_node(dll)
-        while len(vocab) < vocab_size:
-            item = pair_heap.pop()
-            if item is None:
-                break
-            best_pair = item.pair
-            idx = len(vocab)
-            vocab[idx] = best_pair[0] + best_pair[1]
-            merges.append(best_pair)
-            updated_freq = {}
-            # update freq of the pair in the heap by looping dll
-            for node in pair_node[best_pair].copy():
-                # find all (b, c)
-                assert node.next is not None, "Node should have a next node"
-                assert node.word_end is False, "Node should not be a word end"
-                b, c = node.data, node.next.data
-                bc_node = Node(b + c, node.next.word_end, node.freq)
-                # (a, b, c) -> (a, bc)
-                if node.prev is not None:
-                    a = node.prev.data
-                    # a is not end of a word
-                    if not node.prev.word_end:
-                        # a_b_pair should decrease freq
-                        a_b_pair = (a, b)
-                        if a_b_pair not in updated_freq:
-                            updated_freq[a_b_pair] = pair_count[a_b_pair]
-                        updated_freq[a_b_pair] -= node.freq
-                        pair_node[a_b_pair].discard(node.prev)
-                        # a_bc_pair should increase freq
-                        a_bc_pair = (a, b + c)
-                        if a_bc_pair not in updated_freq:
-                            updated_freq[a_bc_pair] = pair_count[a_bc_pair]
-                        updated_freq[a_bc_pair] += node.freq
-                        pair_node[a_bc_pair].add(node.prev)
-                    bc_node.prev = node.prev
-                    node.prev.next = bc_node
-                if node.next.next is not None:
-                    d = node.next.next.data
-                    # c is not end of a word
-                    if not node.next.word_end:
-                        # c_d_pair should decrease freq
-                        c_d_pair = (c, d)
-                        if c_d_pair not in updated_freq:
-                            updated_freq[c_d_pair] = pair_count[c_d_pair]
-                        updated_freq[c_d_pair] -= node.freq
-                        pair_node[c_d_pair].discard(node.next)
-                        # bc_d_pair should increase freq
-                        bc_d_pair = (b + c, d)
-                        if bc_d_pair not in updated_freq:
-                            updated_freq[bc_d_pair] = pair_count[bc_d_pair]
-                        updated_freq[bc_d_pair] += node.freq
-                        pair_node[bc_d_pair].add(bc_node)
-                    bc_node.next = node.next.next
-                    node.next.next.prev = bc_node
-            pair_node[best_pair].clear()
-            pair_count[best_pair] = 0
-            # update freq
-            for updated_pair, freq in updated_freq.items():
-                pair_count[updated_pair] = freq
-                pair_heap.update_count(updated_pair, freq)
-        return vocab, merges              
 
     def merge_pairs_naive(self,
                     vocab: dict[int, bytes],
@@ -219,9 +125,6 @@ class BPETrainer:
         # Step 3. Init pair-counting
         pair_count = self.init_pair_count(word_count)
         # Step 4. Merge pairs
-        if self.train_naive:
-            vocab, merges = self.merge_pairs_naive(vocab, pair_count, word_count, vocab_size)
-        else:
-            vocab, merges = self.merge_pairs_updated(vocab, pair_count, word_count, vocab_size)
+        vocab, merges = self.merge_pairs_naive(vocab, pair_count, word_count, vocab_size)
         return vocab, merges
     
