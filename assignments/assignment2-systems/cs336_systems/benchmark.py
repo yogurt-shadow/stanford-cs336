@@ -3,6 +3,9 @@ import torch, einops, time, os
 import numpy as np
 import pandas as pd
 import pynvml
+from annotated_scaled_dot_product_attention import annotated_scaled_dot_product_attention
+
+cs336_basics.model.scaled_dot_product_attention = annotated_scaled_dot_product_attention
 
 model_specifications = {
     "small": {
@@ -17,12 +20,12 @@ model_specifications = {
         "num_layers": 24,
         "num_heads": 16
     },
-    "large": {
-        "d_model": 1280,
-        "d_ff": 5120,
-        "num_layers": 36,
-        "num_heads": 20
-    },
+    # "large": {
+    #     "d_model": 1280,
+    #     "d_ff": 5120,
+    #     "num_layers": 36,
+    #     "num_heads": 20
+    # },
     # "xl": {
     #     "d_model": 1600,
     #     "d_ff": 6400,
@@ -144,7 +147,7 @@ def test_specification():
         del model
         torch.cuda.empty_cache()
     data = pd.DataFrame(results)
-    with open("./cs336_systems/benchmark_results.md", "w") as f:
+    with open("./cs336_systems/benchmark_results2.md", "w") as f:
         f.write(data.to_markdown(index=False))
 
 if __name__ == "__main__":
