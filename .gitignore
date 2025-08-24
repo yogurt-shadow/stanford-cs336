@@ -18,3 +18,5 @@ assignments/assignment1-basics/.venv/lib/python3.13/site-packages/torch/lib/libt
 assignments/assignment1-basics/.venv/lib/python3.13/site-packages/torch/lib/libtorch_cuda.so
 
 assignments/cs336_basics/data/
+
+.venv
